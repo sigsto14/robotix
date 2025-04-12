@@ -13,7 +13,7 @@ type Bot = {
     direction: Direction;
 }
 
-const directions: Direction[] = ['N', 'E', 'S', 'W'];
+export const directions: Direction[] = ['N', 'E', 'S', 'W'];
 
 export class InvalidDimension extends Error {}
 export class RobotIsDead extends Error {}

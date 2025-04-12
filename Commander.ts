@@ -44,6 +44,22 @@ export default class Commander {
         }));
     }
 
+    async pickOption(prompt: string, options: string[]): Promise<number>
+    {
+        //throwa om ej options?
+        const str: string = options.map((opt: string, index: number): string => `${index + 1}. ${opt}`).join(`\n`);
+        return new Promise((resolve) => this.rl.question(buildPrompt(`${prompt}.\n${str}`), (answer: string) => {
+            const choice: number = Number(answer);
+
+            if(isNaN(choice) || choice < 1 || choice > options.length) {
+                this.warningMessage(`Plase choose an option between 1 and ${options.length}`);
+                resolve(this.pickOption(prompt, options));
+            } 
+
+            resolve(choice);
+        }));
+    }
+
     async getUserConfirm(prompt: string): Promise<boolean>
     {
         const question: string = buildPrompt(prompt + ' Y/N?');
@@ -52,7 +68,7 @@ export default class Commander {
             if(answer.match(/(yes|y|no|n)/i)) {
                 resolve(answer.match(/(yes|y)/i) ? true : false);
             } else {
-                return this.getUserConfirm(prompt);
+                resolve(this.getUserConfirm(prompt));
             }
         }));
     }

@@ -13,9 +13,9 @@ export function getArrow(direction: Direction): string
 {
     switch(direction){
         case 'N': return '🔼';
-        case 'E': return '▶️'; 
+        case 'E': return '▶️\u00a0'; 
         case 'S': return '🔽';
-        case 'W': return '◀️';
+        case 'W': return '◀️\u00a0';
     }
 }
 
@@ -38,3 +38,23 @@ function getExpression(mood: Mood): string
 }
 
 export const gridSquare: string = '⬜';
+
+export function getNumber(number: number): string {
+    if(number < 0 || number > 9) {
+        //något exception
+        return '';
+    }
+    switch(number) {
+        case 0: return '0️⃣';
+        case 1: return '1️⃣';
+        case 2: return '2️⃣';
+        case 3: return '3️⃣';
+        case 4: return '4️⃣';
+        case 5: return '5️⃣';
+        case 6: return '6️⃣';
+        case 7: return '7️⃣';
+        case 8: return '8️⃣';
+        case 9: return '9️⃣';
+        default: return '';
+    }
+}
