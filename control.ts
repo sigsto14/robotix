@@ -1,31 +1,43 @@
-import { getUserInput, userInputThread, getUserConfirm } from './commandHelper';
-
-type GridDimensions = {
-	width: number;
-	height: number;
-}
+import Commander from './Commander';
+import getRobot from './robot';
 
 const grid: string = '[ ]';
+const commander: Commander = new Commander();
 
 export default async function controlTheRobot(): Promise<void>
 {
-	
-	const getStarted: boolean = await getUserConfirm('Are you ready to get this robot walking?');
+	const getStarted: boolean = await commander.getUserConfirm(`Hello! I'm Cool-Bot 5000. I heard you want to teach me how to walk today, is that correct?`);
 
-	console.log(getStarted);
+	if(!getStarted) {
+		commander.close();
+		return message(getRobot('ok, bye', 'sad'));
+	}
+
+	message(getRobot('Great! First let me know a few things,'));
+
+	const gridLinePrompts = [
+		"What's the width of mah grid?",
+		"Whats the height of mah grid?",
+		"Where do I start?",
+	];
+
+	const answers = await commander.userInputThread(gridLinePrompts);
+
+	console.log(answers);
 	return;
-	userInputThread(['svara mej', 'svara mej da']).then((answers: string[]) => console.log(answers));
-    getUserInput('hej hej på dej! Your turn: ').then((answer: string) => console.log(answer));
+	
+    commander.getUserInput('hej hej på dej! Your turn: ').then((answer: string) => console.log(answer));
 
 }
 
-function getGridLine(dimensions: GridDimensions): string
+export function message(msg: string): void
 {
-	let line: number = 0;
+	console.log(msg);
+}
 
-	while(line <= dimensions.height) {
-		console.log(grid);
-	}
-
-	return grid;
+function getGridLine(width: number, height: number): string
+{
+	const line = grid.repeat(width)
+	
+	return `${line} \n`.repeat(height);
 }
