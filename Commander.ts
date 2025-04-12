@@ -1,20 +1,46 @@
-import { createInterface, Interface as RlInterface } from 'node:readline';
-import getRobot from './robot';
+import readline, { Interface as RlInterface } from 'node:readline';
+import { getRobot } from './ascii/robot';
+import { setMaxListeners } from 'node:events';
 
 export default class Commander {
-    rl: RlInterface;
+    rl: RlInterface = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        terminal: true,
+    });
 
     constructor() {
-        this.rl = createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
+        setMaxListeners(20);
+    }
+
+    close(): void
+    {
+        this.rl.close();
+    }
+
+    warningMessage(msg: string): void
+    {
+        console.log(`\u001b[4;33m ${msg} \n`);
     }
 
     async getUserInput(prompt: string): Promise<string>
     {
         return new Promise((resolve) => this.rl.question(buildPrompt(prompt), (answer: string) => {
             resolve(answer);
+        }));
+    }
+
+    async getNumber(prompt: string, min: number = 0, max: number = 100): Promise<number>
+    {
+        return new Promise((resolve) => this.rl.question(buildPrompt(`${prompt}. Number between ${min} and ${max}`), (answer: string) => {
+            const number: number = Number(answer);
+
+            if(isNaN(number) || number < min || number > max) {
+                this.warningMessage(`Plase provide a valid number between ${min} and ${max}`);
+                resolve(this.getNumber(prompt, min, max));
+            } 
+
+            resolve(number);
         }));
     }
 
@@ -35,7 +61,7 @@ export default class Commander {
     {
         const answers: string[] = [];
 
-        for(const [index, prompt] of prompts.entries()) {
+        for(const prompt of prompts) {
             const answer: string = await new Promise((resolve) => this.rl.question(buildPrompt(prompt), (answer: string) => {
                 resolve(answer);
             }));
@@ -44,11 +70,6 @@ export default class Commander {
         }
 
         return answers;
-    }
-
-    close(): void
-    {
-        this.rl.close();
     }
 }
 
