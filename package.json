@@ -5,9 +5,16 @@
 	"description": "It's time we took control of the robots",
 	"scripts": {
 		"start": "npx ts-node index.ts",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "jest"
 	},
 	"dependencies": {
-		"@types/node": "^22.14.0"
+		"@types/node": "^22.14.0",
+		"ts-node": "^10.9.2"
+	},
+	"devDependencies": {
+		"@types/jest": "^29.5.14",
+		"jest": "^29.7.0",
+		"ts-jest": "^29.3.2",
+		"typescript": "^5.8.3"
 	}
 }
