@@ -1,3 +1,3 @@
-import controlTheRobot from "./control";
+import controlTheRobot from "./CLI/controlBot";
 
 controlTheRobot();

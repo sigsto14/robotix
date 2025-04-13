@@ -1,57 +1,33 @@
-import { getArrow } from "./ascii/robot";
-
-type Grid = {
-    xAxis: number;
-    yAxis: number;
-}
+import Bounds from "./Bounds";
 
 export type Direction = 'N' | 'E' | 'S' | 'W';
-
-type Bot = {
-    xPosition: number;
-    yPosition: number;
-    direction: Direction;
-}
-
 export const directions: Direction[] = ['N', 'E', 'S', 'W'];
 
-export class InvalidDimension extends Error {}
 export class RobotIsDead extends Error {}
 
 export default class Robot {
 
-    grid: Grid = {
-        xAxis: 5,
-        yAxis: 7,
-    };
+    public bounds: Bounds;
+    private xPosition: number;
+    private yPosition: number;
+    private direction: Direction;
 
-    bot: Bot = {
-        xPosition: 1,
-        yPosition: 1,
-        direction: 'N',
-    };
+    constructor(bounds: Bounds, xPosition: number, yPosition: number, direction: Direction) {
+        if(xPosition < 0 || xPosition >= bounds.getBoundary('x') || yPosition < 0 || yPosition >= bounds.getBoundary('y')) {
+            throw new RobotIsDead();
+        }
 
-    defineGrid(xAxis: number, yAxis: number): void
-    {
-        if(xAxis < 0 || yAxis < 0) throw new InvalidDimension('dem dimensions be straight crazy, bro');
-
-        this.grid.xAxis = xAxis;
-        this.grid.yAxis = yAxis;
-    } 
-
-    defineBot(xPosition: number, yPosition: number, direction: Direction): void
-    {
-        this.bot.xPosition = xPosition;
-        this.bot.yPosition = yPosition;
-        this.bot.direction = direction;
-        this.checkBounds();
+        this.bounds = bounds;
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.direction = direction;
     }
 
     rotate(direction: 'left' | 'right'): void
     {
-        const index: number = directions.indexOf(this.bot.direction);
+        const index: number = directions.indexOf(this.direction);
 
-        this.bot.direction = ((): Direction =>{
+        this.direction = ((): Direction =>{
             switch(direction) {
                 case 'left': return directions[index - 1] ?? directions[directions.length - 1];
                 case 'right': return directions[index + 1] ?? directions[0];
@@ -62,7 +38,7 @@ export default class Robot {
     move(): void
     {
         const pos: number = (() => {
-            switch(this.bot.direction) {
+            switch(this.direction) {
                 case 'N':
                 case 'E': 
                     return 1;
@@ -72,7 +48,7 @@ export default class Robot {
             }
         })();
 
-        switch(this.bot.direction) {
+        switch(this.direction) {
             case 'N':
             case 'S': 
                 this.moveY(pos);
@@ -86,27 +62,34 @@ export default class Robot {
 
     private moveY(pos: number): void
     {
-        this.bot.yPosition += pos;
+        this.yPosition += pos;
         this.checkBounds();
     }
 
     private moveX(pos: number): void
     {
-        this.bot.xPosition += pos;
+        this.xPosition += pos;
         this.checkBounds();
-        
     }
-
-    getPosition(): string {
-        return `You are in ${this.bot.xPosition} on the x axis, ${this.bot.yPosition} on the y axis and facing ${getArrow(this.bot.direction)}`;
-    }
-
 
     private checkBounds(): void {
         if(
-            (this.bot.xPosition < 1 || this.bot.yPosition < 1) ||
-            (this.bot.xPosition > this.grid.xAxis) || 
-            (this.bot.yPosition > this.grid.yAxis)
+            (this.xPosition < 0 || this.yPosition < 0) ||
+            (this.xPosition > this.bounds.getBoundary('x') - 1) || 
+            (this.yPosition > this.bounds.getBoundary('y') - 1)
         ) throw new RobotIsDead('OUT OF BOUNDS');
+    }
+
+    getPosition(axis: 'x' | 'y'): number
+    {
+        switch(axis) {
+            case 'x': return this.xPosition;
+            case 'y': return this.yPosition;
+        }
+    }
+
+    getDirection(): Direction
+    {
+        return this.direction;
     }
 }
