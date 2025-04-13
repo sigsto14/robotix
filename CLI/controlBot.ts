@@ -1,7 +1,7 @@
-import Bounds, { InvalidBoundary, BOUNDARY_X_LIMIT, BOUNDARY_Y_LIMIT} from '../Bounds';
+import Bounds, { InvalidBoundary, BOUNDARY_X_LIMIT, BOUNDARY_Y_LIMIT} from '../Robot/Bounds';
 import CommandHandler from './CommandHandler';
-import Robot, { RobotIsDead, directions } from '../Robot';
-import { Direction } from '../Robot';
+import Robot, { RobotIsDead, directions } from '../Robot/Robot';
+import { Direction } from '../Robot/Robot';
 import Color from './assets/Color';
 import { displayRobot, gameOver, displayGrid } from './assets/robotAssets';
 

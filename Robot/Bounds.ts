@@ -11,7 +11,7 @@ export default class Bounds {
 
     constructor(x: number, y: number) {
         if(x < 0 || x > BOUNDARY_X_LIMIT || y < 0 || y > BOUNDARY_Y_LIMIT) {
-            throw new InvalidBoundary();
+            throw new InvalidBoundary('Invalid boundary');
         }
 
         this.x = x;

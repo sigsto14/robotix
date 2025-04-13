@@ -14,7 +14,7 @@ export default class Robot {
 
     constructor(bounds: Bounds, xPosition: number, yPosition: number, direction: Direction) {
         if(xPosition < 0 || xPosition >= bounds.getBoundary('x') || yPosition < 0 || yPosition >= bounds.getBoundary('y')) {
-            throw new RobotIsDead();
+            throw new RobotIsDead('Outside of boundary');
         }
 
         this.bounds = bounds;

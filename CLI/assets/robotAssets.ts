@@ -1,5 +1,5 @@
-import Robot, { Direction } from "../../Robot";
-import Bounds from "../../Bounds";
+import Robot, { Direction } from "../../Robot/Robot";
+import Bounds from "../../Robot/Bounds";
 import Color from "./Color";
 
 export function displayRobot(msg: string = ''): string
